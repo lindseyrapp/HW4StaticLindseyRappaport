@@ -5,35 +5,38 @@ import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
+// This function tells Astro what blog pages (slugs) to generate
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
+
   return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
+    params: { slug: post.slug },    // <-- This is where the slug comes from
+    props: { post },                 // <-- Pass the whole post data into the page
   }));
 }
 
+// Each page gets a specific post based on slug
 const { post } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <BaseHead title={`${post.data.title} | ${SITE_TITLE}`} description={post.data.description} />
-  </head>
-  <body>
+</head>
+<body>
     <Header />
     <main>
-      <article>
-        <h1>{post.data.title}</h1>
-        <p><strong>Published on:</strong> {post.data.pubDate}</p>
-        <p>{post.data.description}</p>
-        <div>
-          {post.body}
-        </div>
-      </article>
+        <article>
+            <h1>{post.data.title}</h1>
+            <p><strong>Published on:</strong> {post.data.pubDate}</p>
+            <p><strong>Description:</strong> {post.data.description}</p>
+            <hr />
+            <div>
+                {post.body}
+            </div>
+        </article>
     </main>
     <Footer />
-  </body>
+</body>
 </html>
-
