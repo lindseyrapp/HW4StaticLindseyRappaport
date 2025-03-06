@@ -1,7 +1,7 @@
 ---
 title: "My First Blog Post"
-date: "2025-03-05"
-description: "An introduction to my blog and what you can expect."
+description: "This is my very first blog post in Astro!"
+pubDate: 2025-03-05
 ---
 
 # My First Blog Post
