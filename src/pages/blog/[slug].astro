@@ -1,21 +1,37 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
-import { render } from 'astro:content';
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
 
-export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: post,
-	}));
+// Get all posts
+const allPosts = await getCollection('blog');
+
+// Find the current post by slug (the URL parameter)
+const { slug } = Astro.params;
+const post = allPosts.find((p) => p.slug === slug);
+
+if (!post) {
+	throw new Error(`Post not found: ${slug}`);
 }
-type Props = CollectionEntry<'blog'>;
-
-const post = Astro.props;
-const { Content } = await render(post);
 ---
 
-<BlogPost {...post.data}>
-	<Content />
-</BlogPost>
+<!doctype html>
+<html lang="en">
+<head>
+	<BaseHead title={post.data.title} description={post.data.description || 'Blog Post'} />
+</head>
+<body>
+	<Header />
+	<main>
+		<article>
+			<h1>{post.data.title}</h1>
+			<p><time>{post.data.date}</time></p>
+			<section>
+				{post.body}
+			</section>
+		</article>
+	</main>
+	<Footer />
+</body>
+</html>
