@@ -1,34 +1,33 @@
 ---
-import { getCollection } from 'astro:content';
+import { getEntryBySlug, getCollection } from 'astro:content';
 
-// Get all posts from the 'blog' collection
-const posts = await getCollection('blog');
-
-// Generate paths for each post (this is required for dynamic pages)
+// Get all blog posts so we can dynamically generate paths
 export async function getStaticPaths() {
-    return posts.map((post) => ({
-        params: { slug: post.slug }, 
-        props: { post }
-    }));
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
 }
 
-// Pull the correct post for this page
+// Access the current post (this is passed from getStaticPaths)
 const { post } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
 <head>
-    <title>{post.data.title}</title>
+  <title>{post.data.title}</title>
+  <meta name="description" content={post.data.description} />
 </head>
 <body>
-    <article>
-        <h1>{post.data.title}</h1>
-        <p><small>Published on {post.data.pubDate.toLocaleDateString()}</small></p>
-        <section>
-            {post.body}
-        </section>
-    </article>
+  <header>
+    <h1>{post.data.title}</h1>
+    <p><time>{post.data.pubDate.toLocaleDateString()}</time></p>
+  </header>
+
+  <main>
+    {post.body}
+  </main>
 </body>
 </html>
-
