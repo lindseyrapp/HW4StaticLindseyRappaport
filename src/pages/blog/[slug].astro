@@ -1,68 +1,35 @@
 ---
 import { getEntryBySlug } from 'astro:content';
-import { SITE_TITLE } from '../../consts';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
 
+// Get the slug from the URL params
 const { slug } = Astro.params;
 
-// Load the correct blog post by slug (filename without .md)
+// Load the blog post using the slug
 const post = await getEntryBySlug('blog', slug);
 
 if (!post) {
-	throw new Error(`Post not found for slug: ${slug}`);
+    throw new Error(`Post with slug "${slug}" not found`);
 }
-
-const { title, pubDate, description } = post.data;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<title>{title} | {SITE_TITLE}</title>
-		<meta name="description" content={description} />
-	</head>
-	<body>
-		<header>
-			<a href="/">Home</a> / <a href="/blog">Blog</a>
-		</header>
-
-		<main>
-			<article>
-				<h1>{title}</h1>
-				<time>{pubDate.toLocaleDateString()}</time>
-
-				<!-- This is the ✨ magic ✨ part — render Markdown properly -->
-				<Markdown content={post.body} />
-			</article>
-		</main>
-	</body>
+<head>
+	<BaseHead title={post.data.title} description={post.data.description} />
+</head>
+<body>
+	<Header />
+	<main>
+		<article>
+			<h1>{post.data.title}</h1>
+			<time>{post.data.pubDate.toLocaleDateString()}</time>
+			<!-- This renders the actual HTML content from the Markdown -->
+			{post.content}
+		</article>
+	</main>
+	<Footer />
+</body>
 </html>
-
-<style>
-	body {
-		font-family: Arial, sans-serif;
-		margin: 2rem;
-		max-width: 800px;
-	}
-	header a {
-		margin-right: 10px;
-		text-decoration: none;
-		color: #1b79b8;
-	}
-	h1 {
-		margin-top: 0;
-	}
-	time {
-		display: block;
-		margin-bottom: 1rem;
-		color: #888;
-	}
-	article {
-		line-height: 1.6;
-	}
-	article h1, article h2, article h3 {
-		color: #154768;
-	}
-	article p, article li {
-		margin-bottom: 1rem;
-	}
-</style>
