@@ -1,33 +1,62 @@
 ---
 import { getEntryBySlug, getCollection } from 'astro:content';
+import { SITE_TITLE } from '../../consts';
 
-// Get all blog posts so we can dynamically generate paths
-export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post }
-  }));
+const { slug } = Astro.params;
+
+// Load the post data based on the URL slug
+const post = await getEntryBySlug('blog', slug);
+
+if (!post) {
+	throw new Error(`Post not found for slug: ${slug}`);
 }
 
-// Access the current post (this is passed from getStaticPaths)
-const { post } = Astro.props;
+const { title, pubDate, description } = post.data;
 ---
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>{post.data.title}</title>
-  <meta name="description" content={post.data.description} />
-</head>
-<body>
-  <header>
-    <h1>{post.data.title}</h1>
-    <p><time>{post.data.pubDate.toLocaleDateString()}</time></p>
-  </header>
+	<head>
+		<title>{title} | {SITE_TITLE}</title>
+		<meta name="description" content={description} />
+	</head>
+	<body>
+		<header>
+			<a href="/">Home</a> / <a href="/blog">Blog</a>
+		</header>
 
-  <main>
-    {post.body}
-  </main>
-</body>
+		<main>
+			<article>
+				<h1>{title}</h1>
+				<time>{pubDate.toLocaleDateString()}</time>
+				<div class="content">
+					{post.body}
+				</div>
+			</article>
+		</main>
+	</body>
 </html>
+
+<style>
+	body {
+		font-family: Arial, sans-serif;
+		margin: 2rem;
+	}
+	header a {
+		margin-right: 10px;
+		text-decoration: none;
+		color: #1b79b8;
+	}
+	h1 {
+		margin-top: 0;
+	}
+	time {
+		display: block;
+		margin-bottom: 1rem;
+		color: #888;
+	}
+	.content {
+		line-height: 1.6;
+	}
+</style>
+
