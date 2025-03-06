@@ -1,10 +1,10 @@
 ---
-import { getEntryBySlug, getCollection } from 'astro:content';
+import { getEntryBySlug } from 'astro:content';
 import { SITE_TITLE } from '../../consts';
 
 const { slug } = Astro.params;
 
-// Load the post data based on the URL slug
+// Load the correct blog post by slug (filename without .md)
 const post = await getEntryBySlug('blog', slug);
 
 if (!post) {
@@ -29,9 +29,9 @@ const { title, pubDate, description } = post.data;
 			<article>
 				<h1>{title}</h1>
 				<time>{pubDate.toLocaleDateString()}</time>
-				<div class="content">
-					{post.body}
-				</div>
+
+				<!-- This is the ✨ magic ✨ part — render Markdown properly -->
+				<Markdown content={post.body} />
 			</article>
 		</main>
 	</body>
@@ -41,6 +41,7 @@ const { title, pubDate, description } = post.data;
 	body {
 		font-family: Arial, sans-serif;
 		margin: 2rem;
+		max-width: 800px;
 	}
 	header a {
 		margin-right: 10px;
@@ -55,8 +56,13 @@ const { title, pubDate, description } = post.data;
 		margin-bottom: 1rem;
 		color: #888;
 	}
-	.content {
+	article {
 		line-height: 1.6;
 	}
+	article h1, article h2, article h3 {
+		color: #154768;
+	}
+	article p, article li {
+		margin-bottom: 1rem;
+	}
 </style>
-
