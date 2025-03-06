@@ -1,7 +1,7 @@
 ---
 title: "Reflecting on My Research Internship"
-date: "2025-03-03"
 description: "A personal reflection on my research internship at LBNL."
+pubDate: 2025-03-04
 ---
 
 # Reflecting on My Research Internship
