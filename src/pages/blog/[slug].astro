@@ -4,15 +4,18 @@ import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
-// Get the slug from the URL params
+// Get the slug from the URL
 const { slug } = Astro.params;
 
-// Load the blog post using the slug
+// Fetch the blog post data
 const post = await getEntryBySlug('blog', slug);
 
 if (!post) {
-    throw new Error(`Post with slug "${slug}" not found`);
+  throw new Error(`Blog post with slug "${slug}" not found`);
 }
+
+// Rendered HTML content from Markdown
+const { Content } = await post.render();
 ---
 
 <!doctype html>
@@ -26,10 +29,11 @@ if (!post) {
 		<article>
 			<h1>{post.data.title}</h1>
 			<time>{post.data.pubDate.toLocaleDateString()}</time>
-			<!-- This renders the actual HTML content from the Markdown -->
-			{post.content}
+			<!-- Use the Content component to properly render the blog post HTML -->
+			<Content />
 		</article>
 	</main>
 	<Footer />
 </body>
 </html>
+
