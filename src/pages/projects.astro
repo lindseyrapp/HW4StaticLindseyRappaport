@@ -1,0 +1,30 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+    <BaseHead title="Projects" description="Check out my projects" />
+</head>
+<body>
+    <Header />
+    <main>
+        <h1>My Projects</h1>
+        <ProjectCard 
+            title="Developer Journal"
+            description="A collaborative project to create a journaling tool for developers."
+            link="https://github.com/cse110-sp24-group12/cse110-sp24-group12"
+        />
+        <ProjectCard 
+            title="Personal Portfolio"
+            description="Portfolio website built by me!"
+            link="https://lindseyrappaport-hw4.netlify.app"
+        />
+    </main>
+    <Footer />
+</body>
+</html>
