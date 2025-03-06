@@ -1,7 +1,7 @@
 ---
 title: "What I Learned in CSE 110"
-date: "2025-03-04"
-description: "Reflections on my experience in CSE 110 and key takeaways."
+description: "A reflection on my time in CSE 110 at UCSD."
+pubDate: 2025-03-04
 ---
 
 # What I Learned in CSE 110
