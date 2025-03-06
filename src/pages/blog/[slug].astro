@@ -1,37 +1,39 @@
 ---
 import { getCollection } from 'astro:content';
+import { SITE_TITLE } from '../../consts';
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
-// Get all posts
-const allPosts = await getCollection('blog');
-
-// Find the current post by slug (the URL parameter)
-const { slug } = Astro.params;
-const post = allPosts.find((p) => p.slug === slug);
-
-if (!post) {
-	throw new Error(`Post not found: ${slug}`);
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
 }
+
+const { post } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
-<head>
-	<BaseHead title={post.data.title} description={post.data.description || 'Blog Post'} />
-</head>
-<body>
-	<Header />
-	<main>
-		<article>
-			<h1>{post.data.title}</h1>
-			<p><time>{post.data.date}</time></p>
-			<section>
-				{post.body}
-			</section>
-		</article>
-	</main>
-	<Footer />
-</body>
+  <head>
+    <BaseHead title={`${post.data.title} | ${SITE_TITLE}`} description={post.data.description} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <article>
+        <h1>{post.data.title}</h1>
+        <p><strong>Published on:</strong> {post.data.pubDate}</p>
+        <p>{post.data.description}</p>
+        <div>
+          {post.body}
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
 </html>
+
