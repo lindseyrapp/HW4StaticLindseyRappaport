@@ -3,68 +3,65 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getCollection } from 'astro:content';
 
-// Example placeholder posts - these would come from your /content/blog/ folder in a real site
-const posts = [
-	{ title: 'My First Blog Post', slug: 'my-first-blog-post', date: '2025-03-05' },
-	{ title: 'What I Learned in CSE 110', slug: 'what-i-learned-cse110', date: '2025-03-04' },
-	{ title: 'Reflecting on My Research Internship', slug: 'research-internship-reflection', date: '2025-03-03' }
-];
+const posts = await getCollection('blog');
+
+posts.sort((a, b) => b.data.pubDate - a.data.pubDate);
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>Welcome to Lindsey's Blog & Portfolio</h1>
+<head>
+	<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+</head>
+<body>
+	<Header />
+	<main>
+		<h1>Welcome to Lindsey's Blog & Portfolio</h1>
+		<p>
+			Hi! I'm Lindsey Rappaport, a Computer Science student at UCSD. This site is a blog where I document my learning journey, personal projects, and reflections on web development, 
+			research, and creative problem-solving.
+		</p>
+
+		<section>
+			<h2>Latest Blog Posts</h2>
+			<p>Here are some of my recent posts. Check them out!</p>
+			<ul>
+				{posts.map((post) => (
+					<li>
+						<a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+						— <time>{post.data.pubDate.toLocaleDateString()}</time>
+					</li>
+				))}
+			</ul>
+		</section>
+
+		<section>
+			<h2>Explore My Work</h2>
 			<p>
-				Hi! I'm Lindsey Rappaport, a Computer Science student at UCSD. This site is a blog where I document my learning journey, personal projects, and reflections on web development, 
-				research, and creative problem-solving.
+				Want to see my projects? Head over to my <a href="/projects">Projects Page</a> where I highlight software projects, research, and creative work.
 			</p>
+		</section>
 
-			<section>
-				<h2>Latest Blog Posts</h2>
-				<p>Here are some of my recent posts. Check them out!</p>
-				<ul>
-					{posts.map((post) => (
-						<li>
-							<a href={`/blog/${post.slug}/`}>{post.title}</a> — <time>{post.date}</time>
-						</li>
-					))}
-				</ul>
-			</section>
+		<section>
+			<h2>Why This Site Uses Astro</h2>
+			<p>
+				This site was built with <a href="https://astro.build/" target="_blank">Astro</a>, a static site generator
+				that helps me create fast-loading pages with minimal JavaScript. Astro lets me write my content in Markdown
+				or MDX, and handles all the templating and routing for me!
+			</p>
+		</section>
 
-			<section>
-				<h2>Explore My Work</h2>
-				<p>
-					Want to see my projects? Head over to my <a href="/projects">Projects Page</a> where I highlight software projects, research, and creative work.
-				</p>
-			</section>
-
-			<section>
-				<h2>Why This Site Uses Astro</h2>
-				<p>
-					This site was built with <a href="https://astro.build/" target="_blank">Astro</a>, a static site generator
-					that helps me create fast-loading pages with minimal JavaScript. Astro lets me write my content in Markdown
-					or MDX, and handles all the templating and routing for me!
-				</p>
-			</section>
-
-			<section>
-				<h2>Get in Touch</h2>
-				<p>
-					You can always <a href="/contact">contact me</a> or connect on
-					<a href="https://www.linkedin.com/in/lindsey-rappaport" target="_blank">LinkedIn</a>. 
-					I love talking about code, creativity, and collaboration.
-				</p>
-			</section>
-		</main>
-		<Footer />
-	</body>
+		<section>
+			<h2>Get in Touch</h2>
+			<p>
+				You can always <a href="/contact">contact me</a> or connect on
+				<a href="https://www.linkedin.com/in/lindsey-rappaport" target="_blank">LinkedIn</a>. 
+				I love talking about code, creativity, and collaboration.
+			</p>
+		</section>
+	</main>
+	<Footer />
+</body>
 </html>
-
-
